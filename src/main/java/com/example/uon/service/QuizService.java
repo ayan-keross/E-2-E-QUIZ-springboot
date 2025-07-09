@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import com.example.uon.model.QuestionWrapper;
 import com.example.uon.model.Quiz;
 import com.example.uon.model.Response;
 import com.example.uon.utility.ApiResponse;
+import com.example.uon.utility.QuestionSpecification;
 
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
@@ -37,11 +39,11 @@ public class QuizService {
         return "Welcome to the Quiz Service!";
     }
 
-    public ResponseEntity<String> createNewQuizDynamic(Map<String, String> allParams) {
-        String query = questionDao.findByCategoryAndDifficultyLevel(allParams.get("category"),
-                allParams.get("difficultyLevel")).toString();
-        return ResponseEntity.ok(query);
-    }
+    // public ResponseEntity<String> createNewQuizDynamic(Map<String, String> allParams) {
+    //     String query = questionDao.findByCategoryAndDifficultyLevel(allParams.get("category"),
+    //             allParams.get("difficultyLevel")).toString();
+    //     return ResponseEntity.ok(query);
+    // }
 
     public ResponseEntity<ApiResponse<Quiz>> createQuizDynamic(Map<String, String> allParams) {
         // String sqlQuery = "SELECT * FROM question q WHERE ";
@@ -78,6 +80,28 @@ public class QuizService {
                 "Question created successfully");
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
         // return createQuiz(category, numQuestions, title);
+    }
+
+    public List<Question> findQuestions(String questionTitle, String category, String difficultyLevel) {
+        Specification<Question> spec = Specification.where(null);
+
+        
+        
+        if (questionTitle != null && !questionTitle.isEmpty()) {
+            spec = spec.and(QuestionSpecification.hasQuestionTitleLike(questionTitle));
+        }
+
+        if (category != null && !category.isEmpty()) {
+            spec = spec.and(QuestionSpecification.hasCategory(category));
+        }
+
+        if (difficultyLevel != null && !difficultyLevel.isEmpty()) {
+            spec = spec.and(QuestionSpecification.hasDifficultyLevel(difficultyLevel));
+        }
+
+
+        return questionDao.findAll(spec);
+       
     }
 
     public ResponseEntity<ApiResponse<Quiz>> createQuiz(String category, int numQuestions, String title) {
@@ -143,5 +167,10 @@ public class QuizService {
         ApiResponse<Integer> response = new ApiResponse<>(HttpStatus.OK.value(), List.of(score),
                 "Quiz submitted successfully");
         return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
+
+    public ResponseEntity<String> createNewQuizDynamic(String questionTitle, String category, String difficultyLevel) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'createNewQuizDynamic'");
     }
 }

@@ -4,6 +4,8 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.example.uon.model.Question;
 import com.example.uon.model.QuestionWrapper;
 import com.example.uon.model.Quiz;
 import com.example.uon.model.Response;
@@ -45,12 +48,22 @@ public class QuizController {
     // }
 
     @PostMapping("create")
-    public ResponseEntity<String> createQuiz(@RequestParam Map<String, String> allParams) {
-        // This method will handle the creation of a quiz based on the category and number of questions
-        System.out.println("Params: " + allParams);
+    public ResponseEntity<ApiResponse<Question>> createQuiz(
+            @RequestParam(required = false) String questionTitle,
+            @RequestParam(required = false)  String category,
+            @RequestParam(required = false)  String difficultyLevel) {
+            
+            System.out.println("Received parameters: " + questionTitle + ", " + category + ", " + difficultyLevel);
+            
+            List<Question> questions = quizService.findQuestions(questionTitle, category, difficultyLevel);
 
-        return quizService.createNewQuizDynamic(allParams);
-
+            System.out.println("Found questions: " + questions);
+            //ResponseEntity<List<Question>> response = new ResponseEntity<>(HttpStatus.OK);
+            ApiResponse<Question> response = new ApiResponse<>(HttpStatus.CREATED.value(), questions,
+                "Question created successfully");
+            return ResponseEntity.status(HttpStatus.CREATED).body(response);
+            //return ResponseEntity.status(HttpStatus.OK).body(questions);
+            //return response;
     }
 
     @GetMapping("/{id}")

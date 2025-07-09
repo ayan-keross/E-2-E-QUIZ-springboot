@@ -2,13 +2,14 @@ package com.example.uon.dao;
 import java.util.ArrayList;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.stereotype.Repository;
 
 import com.example.uon.model.Question;
 
 
 @Repository
-public interface QuestionDao extends JpaRepository<Question, Integer>{
+public interface QuestionDao extends JpaRepository<Question, Integer>,JpaSpecificationExecutor<Question>{
         
     // Custom query method to find questions by category
     ArrayList<Question> findByCategory(String category);
