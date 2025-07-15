@@ -27,7 +27,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("/quiz")
+@RequestMapping("api/quiz")
 // This controller will handle quiz-related endpoints
 public class QuizController {
 

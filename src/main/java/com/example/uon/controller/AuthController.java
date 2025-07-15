@@ -1,21 +1,16 @@
 package com.example.uon.controller;
 
-import com.example.uon.dao.UserDao;
 import com.example.uon.model.User;
 import com.example.uon.model.UserRole;
 import com.example.uon.service.UserService;
-import com.google.common.net.MediaType;
 import com.google.firebase.auth.FirebaseAuthException;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
-import java.lang.foreign.Linker.Option;
 import java.net.URI;
 import java.nio.file.Files;
-import java.util.Optional;
 
-import org.checkerframework.checker.units.qual.A;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -53,20 +48,19 @@ public class AuthController {
             return ResponseEntity.status(401).build();
         } catch (IllegalStateException e) {
             System.out.println("User already registered: from catch");
-
-            // userRole = userService.getUserRoleByFirebaseUid(idToken.substring(7));
             try {
                 User userRole = userService.getUserByFirebaseUid(idToken.substring(7));
                 System.out.println("User role: " + userRole);
                 if (userRole.getRole().equals(UserRole.TUTOR)) {
                     System.out.println("User is a tutor, redirecting to tutor home.");
-                    URI redirectUri = URI.create("/tutor/");
+                    URI redirectUri = URI.create("http://localhost:8080/api/tutor/");
                     return ResponseEntity.status(HttpStatus.SEE_OTHER)
                                          .location(redirectUri)
                                          .build();
                 } else if (userRole.getRole().equals(UserRole.STUDENT)) {
                     System.out.println("User is a student, redirecting to student home.");
-                    URI redirectUri = URI.create("/student/");
+                    URI redirectUri = URI.create("http://localhost:8080/api/student/");
+                    System.out.println("Redirect URI: " + redirectUri);
                     return ResponseEntity.status(HttpStatus.SEE_OTHER)
                                          .location(redirectUri)
                                          .build();

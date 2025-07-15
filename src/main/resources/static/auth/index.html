@@ -2,29 +2,143 @@
 <html>
   <head>
     <title>Firebase Auth Test</title>
+    <!-- Styling -->
+    <style>
+      body {
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+        background-color: #f4f6f8;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        margin: 0;
+      }
+
+      .container {
+        background-color: #fff;
+        padding: 30px;
+        border-radius: 10px;
+        width: 100%;
+        max-width: 500px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      }
+
+      h2 {
+        text-align: center;
+        color: #2196f3;
+        margin-bottom: 20px;
+      }
+
+      input[type="email"],
+      input[type="password"] {
+        width: 100%;
+        padding: 12px;
+        margin-top: 8px;
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-sizing: border-box;
+      }
+
+      label {
+        font-weight: bold;
+        display: block;
+        margin-top: 10px;
+        color: #333;
+      }
+
+      .role-options {
+        margin-bottom: 15px;
+      }
+
+      .role-options label {
+        margin-right: 20px;
+        font-weight: normal;
+      }
+
+      button {
+        width: 100%;
+        padding: 12px;
+        background-color: #2196f3;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 15px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: background 0.2s;
+      }
+
+      button:hover {
+        background-color: #1976d2;
+      }
+
+      hr {
+        margin: 25px 0;
+        border: none;
+        border-top: 1px solid #ddd;
+      }
+
+      h3 {
+        color: #555;
+        margin-top: 30px;
+        margin-bottom: 10px;
+      }
+
+      #output {
+        background-color: #f1f1f1;
+        padding: 12px;
+        border-radius: 5px;
+        white-space: pre-wrap;
+        margin-top: 15px;
+        max-height: 200px;
+        overflow-y: auto;
+        font-size: 13px;
+      }
+
+      .backend-buttons button {
+        width: 100%;
+        margin-bottom: 10px;
+      }
+
+      @media (max-width: 600px) {
+        .container {
+          padding: 20px;
+        }
+      }
+    </style>
     <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-auth-compat.js"></script>
   </head>
 
   <body>
-    <h2>Login with Firebase</h2>
-    <input type="email" id="email" placeholder="Email" /><br />
-    <input type="password" id="password" placeholder="Password" /><br />
-    <label> <input type="radio" name="role" value="STUDENT" /> Student </label>
-    <label> <input type="radio" name="role" value="TUTOR" /> Tutor </label
-    ><br />
-    <button onclick="signIn()">Sign In with Email</button><br /><br />
-    <button onclick="signInWithGoogle()">Sign In with Google</button>
-    <hr />
-    <h3>Call Backend</h3>
-    <button onclick="callBackend('/tutor/questions')">
-      GET /tutor/questions
-    </button>
-    <button onclick="callBackend('/student/quiz/1')">
-      GET /student/quiz/1
-    </button>
+    <div class="container">
+      <h2>Login with Firebase</h2>
 
-    <pre id="output"></pre>
+      <input type="email" id="email" placeholder="Email" />
+      <input type="password" id="password" placeholder="Password" />
+
+      <div class="role-options">
+        <label><input type="radio" name="role" value="STUDENT" /> Student</label>
+        <label><input type="radio" name="role" value="TUTOR" /> Tutor</label>
+      </div>
+
+      <button onclick="signIn()">Sign In with Email</button>
+      <button onclick="signInWithGoogle()">Sign In with Google</button>
+
+      <hr />
+      <h3>Call Backend</h3>
+      <div class="backend-buttons">
+        <button onclick="callBackend('/tutor/questions')">
+          GET /tutor/questions
+        </button>
+        <button onclick="callBackend('/student/quiz/1')">
+          GET /student/quiz/1
+        </button>
+      </div>
+
+      <pre id="output">
+        Output will appear here...
 
     <script>
       // ✅ Replace with your Firebase config
@@ -88,46 +202,6 @@
         }
       }
 
-      //   async function registerUser() {
-      //     debugger;
-      //     if (!window.firebaseToken || !window.userRole) {
-      //       alert("Please sign in and select a role first!");
-      //       return;
-      //     }
-
-      //     try {
-      //       const res = await fetch("http://localhost:8080/api/auth/register", {
-      //         method: "POST",
-      //         headers: {
-      //           "Content-Type": "application/json",
-      //           Authorization: "Bearer " + window.firebaseToken,
-      //         },
-      //         body: JSON.stringify({
-      //           role: window.userRole, // roleRequest.getRole() on backend
-      //         }),
-      //       });
-      //       debugger
-      //       if (res.redirect) {
-      //         window.location.href = res.redirect;
-      //       }
-      //       const data = await res.json();
-
-      //       if (res.ok) {
-      //         document.getElementById("output").innerText =
-      //           "✅ Registered:\n" + JSON.stringify(data, null, 2);
-      //       } else if (res.status === 409) {
-      //         document.getElementById("output").innerText =
-      //           "⚠️ User already registered.";
-      //       } else {
-      //         document.getElementById("output").innerText =
-      //           "❌ Registration failed.\nStatus: " + res.status;
-      //       }
-      //     } catch (err) {
-      //       document.getElementById("output").innerText =
-      //         "Error calling /register:\n" + err.message;
-      //     }
-      //   }
-
       async function registerUser() {
         if (!window.firebaseToken || !window.userRole) {
           alert("Please sign in and select a role first!");
@@ -145,30 +219,21 @@
               role: window.userRole,
             }),
           });
-
+          debugger;
+          console.log("Response status:", res);
           if (res.status === 303 || res.status === 302) {
             const location = res.headers.get("Location");
             if (location) {
+              console.log("Redirecting to:", location);
               window.location.href = location;
               return; // stop further processing
             }
           }
 
-          const data = await res.json();
+          //const data = await res.json();
 
           if (res.ok) {
-            document.getElementById("output").innerText =
-              "✅ Registered:\n" + JSON.stringify(data, null, 2);
-            // ✅ Redirect manually if backend doesn’t
-            // window.location.href = "/welcome.html";
-          } else if (res.status === 409) {
-            document.getElementById("output").innerText =
-              "⚠️ User already registered.";
-            // ✅ Redirect manually if user already exists
-            // window.location.href = "/already-registered.html";
-          } else {
-            document.getElementById("output").innerText =
-              "❌ Registration failed.\nStatus: " + res.status;
+            window.location.href = res.url;
           }
         } catch (err) {
           document.getElementById("output").innerText =

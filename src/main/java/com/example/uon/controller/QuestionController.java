@@ -16,14 +16,14 @@ import com.example.uon.utility.ApiResponse;
 
 
 @RestController
-@RequestMapping("/question")
+@RequestMapping("api/question")
 
 public class QuestionController {
 
     @Autowired
     QuestionService questionService;
 
-    @GetMapping("/allQuestions")
+    @GetMapping("/all-questions")
     public ResponseEntity<ApiResponse<Question>> getAllQuestions (){
         return questionService.getAllQuestions();
     }

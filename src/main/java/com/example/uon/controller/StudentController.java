@@ -11,20 +11,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.example.uon.service.TutorService;
+import com.example.uon.service.StudentService;
 
 import lombok.RequiredArgsConstructor;
 
 @RestController
-@RequestMapping("api/tutor")
+@RequestMapping("api/student")
 @RequiredArgsConstructor
-public class TutorController {
-    private final TutorService tutorService;
-    
-    
+public class StudentController {
+    private final StudentService studentService;
+
     @GetMapping("/")
-    public ResponseEntity<String> getTutorHome() throws IOException {
-        System.out.println("Accessing tutor home endpoint");
+    public ResponseEntity<String> getStudentHome() throws IOException {
+        System.out.println("Accessing student home endpoint");
         // ClassPathResource htmlFile = new
         // ClassPathResource("static/auth/student_dashboard.html");
         // byte[] bytes = Files.readAllBytes(htmlFile.getFile().toPath());
@@ -33,7 +32,7 @@ public class TutorController {
 
         InputStream inputStream = getClass()
                 .getClassLoader()
-                .getResourceAsStream("static/auth/tutor_dashboard.html");
+                .getResourceAsStream("static/auth/student_dashboard.html");
 
         if (inputStream == null) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND)
