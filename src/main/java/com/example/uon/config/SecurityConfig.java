@@ -4,7 +4,7 @@ import com.example.uon.security.FirebaseAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -13,7 +13,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(prePostEnabled = true)
+@EnableMethodSecurity(prePostEnabled = true)
 @RequiredArgsConstructor
 public class SecurityConfig {
 
@@ -22,25 +22,21 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            .csrf().disable()
-            .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-            .and()
-            .authorizeRequests()
-            .antMatchers(
-                "/api/auth/register", // Allow registration
-                "/h2-console/**"      // Allow H2 console access for development
-            ).permitAll()
-            .antMatchers("/api/tutor/**").hasAuthority("TUTOR")
-            .antMatchers("/api/student/**").hasAuthority("STUDENT")
-            .anyRequest().authenticated();
+            .csrf(csrf -> csrf.disable())
+            .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+            .authorizeHttpRequests(auth -> auth
+                .requestMatchers(
+                    "/api/auth/register",
+                    "/h2-console/**"
+                ).permitAll()
+                .requestMatchers("/api/tutor/**").hasAuthority("TUTOR")
+                .requestMatchers("/api/student/**").hasAuthority("STUDENT")
+                .anyRequest().authenticated()
+            )
+            .addFilterBefore(firebaseAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+            .headers(headers -> headers.frameOptions(frame -> frame.disable()));
 
-        // Add our custom Firebase filter before the standard authentication filter
-        http.addFilterBefore(firebaseAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
-        
-        // This is to allow H2 console frames to be displayed in browser
-        http.headers().frameOptions().disable();
 
         return http.build();
     }
 }
-
