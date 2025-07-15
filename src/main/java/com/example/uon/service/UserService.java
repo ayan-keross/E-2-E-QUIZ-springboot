@@ -3,9 +3,12 @@ package com.example.uon.service;
 import com.example.uon.model.User;
 import com.example.uon.model.UserRole;
 import com.example.uon.dao.UserDao;
+import java.util.Optional;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
+
+import jakarta.persistence.EnumType;
 import lombok.RequiredArgsConstructor;
 
 import java.io.IOException;
@@ -39,4 +42,20 @@ public class UserService {
 
         return userDao.save(newUser);
     }
+
+    public User getUserByFirebaseUid(String idToken) throws FirebaseAuthException {
+        FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
+        String firebaseUid = decodedToken.getUid();
+        return userDao.findByFirebaseUid(firebaseUid)
+                .orElseThrow(() -> new IllegalStateException("User not found"));
+    }
+
+
+    public Optional<User> getUserRoleByFirebaseUid(String firebaseUid) {
+        Optional<User> userRole = userDao.findByFirebaseUid(firebaseUid);
+        System.out.println("User role from service: " + userRole);
+        return userRole;
+    }
+
+
 }
