@@ -45,48 +45,46 @@ public class QuizService {
     //     return ResponseEntity.ok(query);
     // }
 
-    public ResponseEntity<ApiResponse<Quiz>> createQuizDynamic(Map<String, String> allParams) {
-        // String sqlQuery = "SELECT * FROM question q WHERE ";
+    // public ResponseEntity<ApiResponse<Quiz>> createQuizDynamic(Map<String, String> allParams) {
+    //     // String sqlQuery = "SELECT * FROM question q WHERE ";
 
-        // for (Map.Entry<String, String> entry : allParams.entrySet()) {
-        // String key = entry.getKey();
-        // String value = entry.getValue();
-        // sqlQuery += "q." + key + " = :" + value + " AND ";
-        // }
-        // // Remove the last " AND "
-        // sqlQuery = sqlQuery.substring(0, sqlQuery.length() - 5);
-        // System.out.println("SQL Query: " + sqlQuery);
+    //     // for (Map.Entry<String, String> entry : allParams.entrySet()) {
+    //     // String key = entry.getKey();
+    //     // String value = entry.getValue();
+    //     // sqlQuery += "q." + key + " = :" + value + " AND ";
+    //     // }
+    //     // // Remove the last " AND "
+    //     // sqlQuery = sqlQuery.substring(0, sqlQuery.length() - 5);
+    //     // System.out.println("SQL Query: " + sqlQuery);
 
-        // List<Question> questions = entityManager.createQuery(sqlQuery,
-        // Question.class).getResultList();
+    //     // List<Question> questions = entityManager.createQuery(sqlQuery,
+    //     // Question.class).getResultList();
 
-        StringBuilder jpql = new StringBuilder("SELECT * FROM Question q WHERE 1=1");
-        for (String key : allParams.keySet()) {
-            jpql.append(" AND q.").append(key).append(" = :").append(key);
-        }
-        TypedQuery<Question> query = entityManager.createQuery(jpql.toString(), Question.class);
-        for (Map.Entry<String, String> entry : allParams.entrySet()) {
-            query.setParameter(entry.getKey(), entry.getValue());
-        }
+    //     StringBuilder jpql = new StringBuilder("SELECT * FROM Question q WHERE 1=1");
+    //     for (String key : allParams.keySet()) {
+    //         jpql.append(" AND q.").append(key).append(" = :").append(key);
+    //     }
+    //     TypedQuery<Question> query = entityManager.createQuery(jpql.toString(), Question.class);
+    //     for (Map.Entry<String, String> entry : allParams.entrySet()) {
+    //         query.setParameter(entry.getKey(), entry.getValue());
+    //     }
 
-        List<Question> questions = query.getResultList();
+    //     List<Question> questions = query.getResultList();
 
-        Quiz quiz = new Quiz();
-        quiz.setTitle(allParams.get("title"));
-        quiz.setTitle("GKQuiz2");
-        quiz.setQuestions(questions);
+    //     Quiz quiz = new Quiz();
+    //     quiz.setTitle(allParams.get("title"));
+    //     quiz.setTitle("GKQuiz2");
+    //     quiz.setQuestions(questions);
 
-        ApiResponse<Quiz> response = new ApiResponse<>(HttpStatus.CREATED.value(), List.of(quiz),
-                "Question created successfully");
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
-        // return createQuiz(category, numQuestions, title);
-    }
+    //     ApiResponse<Quiz> response = new ApiResponse<>(HttpStatus.CREATED.value(), List.of(quiz),
+    //             "Question created successfully");
+    //     return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    //     // return createQuiz(category, numQuestions, title);
+    // }
 
     public List<Question> findQuestions(String questionTitle, String category, String difficultyLevel) {
         Specification<Question> spec = Specification.where(null);
 
-        
-        
         if (questionTitle != null && !questionTitle.isEmpty()) {
             spec = spec.and(QuestionSpecification.hasQuestionTitleLike(questionTitle));
         }
@@ -98,10 +96,7 @@ public class QuizService {
         if (difficultyLevel != null && !difficultyLevel.isEmpty()) {
             spec = spec.and(QuestionSpecification.hasDifficultyLevel(difficultyLevel));
         }
-
-
         return questionDao.findAll(spec);
-       
     }
 
     public ResponseEntity<ApiResponse<Quiz>> createQuiz(String category, int numQuestions, String title) {
