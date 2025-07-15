@@ -3,8 +3,15 @@ package com.example.uon.controller;
 import com.example.uon.model.User;
 import com.example.uon.model.UserRole;
 import com.example.uon.service.UserService;
+import com.google.common.net.MediaType;
 import com.google.firebase.auth.FirebaseAuthException;
 import lombok.RequiredArgsConstructor;
+
+import java.io.IOException;
+import java.nio.file.Files;
+
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,8 +22,15 @@ public class AuthController {
 
     private final UserService userService;
 
+    @GetMapping("/")
+    public ResponseEntity<byte[]> getAuthPage() throws IOException {
+        ClassPathResource htmlFile = new ClassPathResource("static/auth/index.html");
+        byte[] bytes = Files.readAllBytes(htmlFile.getFile().toPath());
+        return ResponseEntity.ok().body(bytes);
+    }
     @PostMapping("/register")
     public ResponseEntity<User> register(@RequestHeader("Authorization") String idToken, @RequestBody RoleRequest roleRequest) {
+        System.out.println("Received ID Token: " + idToken);
         try {
             // The token from the client should be "Bearer <token>"
             String token = idToken.substring(7);
@@ -25,7 +39,8 @@ public class AuthController {
         } catch (FirebaseAuthException e) {
             return ResponseEntity.status(401).build();
         } catch (IllegalStateException e) {
-            return ResponseEntity.status(409).body(null); // 409 Conflict
+            System.out.println("User already registered: ");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null); // 409 Conflict
         }
     }
 

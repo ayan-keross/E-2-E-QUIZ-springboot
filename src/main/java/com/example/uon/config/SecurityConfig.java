@@ -26,7 +26,10 @@ public class SecurityConfig {
             .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .authorizeHttpRequests(auth -> auth
                 .requestMatchers(
-                    "/api/auth/register",
+                    "/api/auth/**",
+                    "/api/public/**",
+                    "/api/docs/**",
+                    "/static/**", 
                     "/h2-console/**"
                 ).permitAll()
                 .requestMatchers("/api/tutor/**").hasAuthority("TUTOR")

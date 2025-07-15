@@ -7,6 +7,9 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
 import com.google.firebase.auth.FirebaseToken;
 import lombok.RequiredArgsConstructor;
+
+import java.io.IOException;
+
 import org.springframework.stereotype.Service;
 
 @Service
@@ -22,9 +25,12 @@ public class UserService {
         String uid = decodedToken.getUid();
         String email = decodedToken.getEmail();
 
+        System.out.println("Decoded token :: "+uid);
+
         if (userDao.findByFirebaseUid(uid).isPresent()) {
+            //throw new IOException("Test");
             throw new IllegalStateException("User already registered.");
-        }
+         }
 
         User newUser = new User();
         newUser.setFirebaseUid(uid);

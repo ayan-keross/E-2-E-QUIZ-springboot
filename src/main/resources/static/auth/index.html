@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Firebase Auth Test</title>
+    <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.5.2/firebase-auth-compat.js"></script>
+</head>
+
+<body>
+    <h2>Login with Firebase</h2>
+    <input type="email" id="email" placeholder="Email" /><br />
+    <input type="password" id="password" placeholder="Password" /><br />
+    <label>
+        <input type="radio" name="role" value="STUDENT" /> Student
+    </label>
+    <label>
+        <input type="radio" name="role" value="TUTOR" /> Tutor
+    </label><br />
+    <button onclick="signIn()">Sign In with Email</button><br /><br />
+    <button onclick="signInWithGoogle()">Sign In with Google</button>
+    <hr />
+    <h3>Call Backend</h3>
+    <button onclick="callBackend('/tutor/questions')">GET /tutor/questions</button>
+    <button onclick="callBackend('/student/quiz/1')">GET /student/quiz/1</button>
+
+    <pre id="output"></pre>
+
+    <script>
+        // ✅ Replace with your Firebase config
+        const firebaseConfig = {
+            apiKey: "AIzaSyAGu1s0SF2EWotlmrxeZP9b6G4azqHA2ec",
+            authDomain: "quiz-app-cb494.firebaseapp.com",
+            projectId: "quiz-app-cb494",
+            storageBucket: "quiz-app-cb494.firebasestorage.app",
+            messagingSenderId: "383936048912",
+            appId: "1:383936048912:web:4533dd44124b561f20bf95",
+            measurementId: "G-X7WBMGHVQ8"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+
+        async function signInWithGoogle() {
+            const provider = new firebase.auth.GoogleAuthProvider();
+            const role = document.querySelector('input[name="role"]:checked')?.value;
+
+            if (!role) {
+                alert("Please select a role (Student or Tutor).");
+                return;
+            }
+
+            try {
+                const result = await firebase.auth().signInWithPopup(provider);
+                const token = await result.user.getIdToken();
+
+                console.log(result);
+
+                window.firebaseToken = token;
+                window.userRole = role; // Store selected role globally
+                document.getElementById("output").innerText =
+                    "Google Sign-In Successful! Token:\n" + token;
+                registerUser();
+                // if(result.additionalUserInfo.isNewUser){
+                //     registerUser();
+                // }else{
+                //     alert("Existing user");
+                // }
+                
+            } catch (err) {
+                document.getElementById("output").innerText =
+                    "Google Sign-In Failed:\n" + err.message;
+            }
+        }
+        async function signIn() {
+            const email = document.getElementById("email").value;
+            const password = document.getElementById("password").value;
+
+            try {
+                //const userCred = await firebase.auth().signInWithEmailAndPassword(email, password);
+                const token = await userCred.user.getIdToken();
+                window.firebaseToken = token;
+                document.getElementById("output").innerText = "Signed in! Token:\n" + token;
+            } catch (err) {
+                document.getElementById("output").innerText = "Sign-in failed:\n" + err.message;
+            }
+        }
+
+        async function registerUser() {
+            debugger
+            if (!window.firebaseToken || !window.userRole) {
+                alert("Please sign in and select a role first!");
+                return;
+            }
+
+            try {
+                const res = await fetch("http://localhost:8080/api/auth/register", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": "Bearer " + window.firebaseToken
+                    },
+                    body: JSON.stringify({
+                        role: window.userRole // roleRequest.getRole() on backend
+                    })
+                });
+
+                const data = await res.json();
+
+                if (res.ok) {
+                    document.getElementById("output").innerText = "✅ Registered:\n" + JSON.stringify(data, null, 2);
+                } else if (res.status === 409) {
+                    document.getElementById("output").innerText = "⚠️ User already registered.";
+                } else {
+                    document.getElementById("output").innerText = "❌ Registration failed.\nStatus: " + res.status;
+                }
+            } catch (err) {
+                document.getElementById("output").innerText = "Error calling /register:\n" + err.message;
+            }
+        }
+
+    </script>
+</body>
+
+</html>
