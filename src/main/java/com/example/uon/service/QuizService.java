@@ -136,7 +136,9 @@ public class QuizService {
                         q.getOption1(),
                         q.getOption2(),
                         q.getOption3(),
-                        q.getOption4()))
+                        q.getOption4(),
+                        q.getDifficultyLevel(),
+                        q.getCategory()))
                 .toList();
 
         ApiResponse<QuestionWrapper> response = new ApiResponse<>(HttpStatus.OK.value(), wrappers,
