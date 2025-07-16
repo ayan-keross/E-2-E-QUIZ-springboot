@@ -7,5 +7,5 @@ import java.util.Optional;
 public interface UserDao extends JpaRepository<User, Long> {
     Optional<User> findByFirebaseUid(String firebaseUid);
 
-    User getRoleByFirebaseUid(String firebaseUid);
+    Optional<User> findByRole(String role);
 }
