@@ -51,7 +51,7 @@ public class AuthController {
             try {
                 User userRole = userService.getUserByFirebaseUid(idToken.substring(7));
                 System.out.println("User role: " + userRole);
-                if (userRole.getRole().equals(UserRole.TUTOR)) {
+                if (userRole.getRole().toString().equals("TUTOR")) {
                     System.out.println("User is a tutor, redirecting to tutor home.");
                     URI redirectUri = URI.create("http://localhost:8080/api/tutor/");
                     return ResponseEntity.status(HttpStatus.SEE_OTHER)
