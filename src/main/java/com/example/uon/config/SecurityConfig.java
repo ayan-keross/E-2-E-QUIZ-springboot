@@ -38,22 +38,20 @@ public class SecurityConfig {
 
         http
                 .csrf(csrf -> csrf.disable())
-                // .sessionManagement(session ->
-                // session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(
-                                // "/api/student/**",
+                            //"/api/student/**",
                                 "/api/auth/**",
+                                "/favicon.ico",
                                 "/static/**",
                                 "/h2-console/**")
                         .permitAll()
-                        .requestMatchers(
-                                "/api/tutor/**",
-                                "/api/student/**")
-                        .authenticated()
+                        .requestMatchers("/api/tutor/**").hasAuthority("TUTOR")
+                        .requestMatchers("/api/student/**").hasAuthority("STUDENT")
                         .anyRequest().authenticated())
-                .addFilterBefore(firebaseAuthorizationFilter, UsernamePasswordAuthenticationFilter.class);
-        // .headers(headers -> headers.frameOptions(frame -> frame.disable()));
+                .addFilterBefore(firebaseAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
+                .headers(headers -> headers.frameOptions(frame -> frame.disable()));
 
         return http.build();
     }
