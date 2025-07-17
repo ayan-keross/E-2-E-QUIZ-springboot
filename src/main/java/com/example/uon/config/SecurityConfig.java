@@ -48,7 +48,7 @@ public class SecurityConfig {
                                 "/h2-console/**")
                         .permitAll()
                         .requestMatchers("/api/tutor/**").hasAuthority("TUTOR")
-                        .requestMatchers("/api/student/**").hasAuthority("STUDENT")
+                        .requestMatchers("/api/student/**").authenticated()
                         .anyRequest().authenticated())
                 .addFilterBefore(firebaseAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .headers(headers -> headers.frameOptions(frame -> frame.disable()));
