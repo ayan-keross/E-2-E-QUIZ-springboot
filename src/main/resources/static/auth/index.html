@@ -233,7 +233,29 @@
           //const data = await res.json();
 
           if (res.ok) {
-            window.location.href = res.url;
+            if (res.url) {
+                // If we get a redirect URL, fetch the content of that URL
+                // with the authentication token.
+                const redirectResponse = await fetch(res.url, {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': 'Bearer ' + window.firebaseToken
+                    }
+                });
+
+                if(redirectResponse.ok) {
+                    // If the response is HTML, you can replace the current page's content
+                    const html = await redirectResponse.text();
+                    // The 'state' object can be null, title is ignored by most browsers.
+                    history.pushState(null, '', res.url);
+                    document.documentElement.innerHTML = html;
+                } else {
+                    document.getElementById("output").innerText = "Redirect failed: " + redirectResponse.status;
+                }
+            } else {
+                 // Handle new user registration success
+                 document.getElementById("output").innerText = "Registration successful!";
+            }
           }
         } catch (err) {
           document.getElementById("output").innerText =

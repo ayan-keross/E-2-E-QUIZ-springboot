@@ -24,7 +24,7 @@ import lombok.RequiredArgsConstructor;
 public class StudentController {
     private final StudentService studentService;
 
-    @PreAuthorize("hasAnyAuthority('STUDENT')")
+    //@PreAuthorize("hasAnyAuthority('STUDENT')")
     @GetMapping("/get")
     public ResponseEntity<String> getStudentHome() throws IOException {
         System.out.println("Accessing student home endpoint");
