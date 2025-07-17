@@ -48,22 +48,22 @@ public class StudentController {
         // return ResponseEntity.ok().body(bytes);
         // return studentService.getStudentHome();
 
-        // InputStream inputStream = getClass()
-        //         .getClassLoader()
-        //         .getResourceAsStream("static/auth/student_dashboard.html");
+        InputStream inputStream = getClass()
+                .getClassLoader()
+                .getResourceAsStream("static/auth/student_dashboard.html");
 
 
-        // System.out.println("InputStream: ");
+        System.out.println("InputStream: ");
 
-        // if (inputStream == null) {
-        //     return ResponseEntity.status(HttpStatus.NOT_FOUND)
-        //             .body("<h1>HTML file not found</h1>");
-        // }
+        if (inputStream == null) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body("<h1>HTML file not found</h1>");
+        }
 
-        // String htmlContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
-        // return ResponseEntity.ok()
-        //         .header(HttpHeaders.CONTENT_TYPE, "text/html")
-        //         .body(htmlContent);
-        return new ResponseEntity<>("Data", HttpStatus.OK);
+        String htmlContent = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+        return ResponseEntity.ok()
+                .header(HttpHeaders.CONTENT_TYPE, "text/html")
+                .body(htmlContent);
+        //return new ResponseEntity<>("Data", HttpStatus.OK);
     }
 }
