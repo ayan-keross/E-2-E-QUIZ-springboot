@@ -53,13 +53,13 @@ public class AuthController {
                 System.out.println("User role: " + userRole);
                 if (userRole.getRole().toString().equals("TUTOR")) {
                     System.out.println("User is a tutor, redirecting to tutor home.");
-                    URI redirectUri = URI.create("http://localhost:8080/api/tutor/");
+                    URI redirectUri = URI.create("http://localhost:8080/api/tutor");
                     return ResponseEntity.status(HttpStatus.SEE_OTHER)
                                          .location(redirectUri)
                                          .build();
                 } else if (userRole.getRole().equals(UserRole.STUDENT)) {
                     System.out.println("User is a student, redirecting to student home.");
-                    URI redirectUri = URI.create("http://localhost:8080/api/student/");
+                    URI redirectUri = URI.create("http://localhost:8080/api/student/get");
                     System.out.println("Redirect URI: " + redirectUri);
                     return ResponseEntity.status(HttpStatus.SEE_OTHER)
                                          .location(redirectUri)

@@ -51,10 +51,23 @@ public class UserService {
     }
 
 
-    public Optional<User> getUserRoleByFirebaseUid(String firebaseUid) {
-        Optional<User> userRole = userDao.findByFirebaseUid(firebaseUid);
-        System.out.println("User role from service: " + userRole);
-        return userRole;
+    // public Optional<User> getUserRoleByFirebaseUid(String firebaseUid) {
+    //     Optional<User> userRole = userDao.findByFirebaseUid(firebaseUid);
+    //     System.out.println("User role from service: " + userRole);
+    //     return userRole;
+    // }
+
+    public String getRoleByFirebaseUid(String firebaseUid) {
+        // 🔍 Fetch role from MySQL DB
+        // Assuming userDao has a method to get role by Firebase UID
+        
+        User user = userDao.getRoleByFirebaseUid(firebaseUid);
+        if (user == null) {
+            throw new RuntimeException("Role not found for Firebase UID: " + firebaseUid);
+        }else{
+            System.out.println("User role from service: " + user.getRole());
+            return user.getRole().toString(); // Returns "TUTOR" or "STUDENT"
+        }
     }
 
 
