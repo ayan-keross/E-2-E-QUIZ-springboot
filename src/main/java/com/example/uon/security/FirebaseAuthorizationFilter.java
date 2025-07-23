@@ -27,10 +27,6 @@ public class FirebaseAuthorizationFilter extends OncePerRequestFilter {
 
     private final UserService userService;
 
-    // public FirebaseAuthorizationFilter(UserService userService) {
-    // this.userService = userService;
-    // }
-
     @Override
     protected void doFilterInternal(HttpServletRequest request,
             HttpServletResponse response,
