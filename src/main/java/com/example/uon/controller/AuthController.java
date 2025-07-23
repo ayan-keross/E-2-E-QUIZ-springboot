@@ -51,6 +51,8 @@ public class AuthController {
                                      .build();
             }
             return ResponseEntity.ok(newUser);
+
+            
         } catch (FirebaseAuthException e) {
             return ResponseEntity.status(401).build();
         } catch (IllegalStateException e) {
