@@ -50,7 +50,9 @@ public class AuthController {
                                      .location(redirectUri)
                                      .build();
             }
+
             
+
             return ResponseEntity.ok(newUser);
 
             

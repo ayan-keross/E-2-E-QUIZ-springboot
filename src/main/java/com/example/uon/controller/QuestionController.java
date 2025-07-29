@@ -27,6 +27,8 @@ public class QuestionController {
     public ResponseEntity<ApiResponse<Question>> getAllQuestions (){
         return questionService.getAllQuestions();
     }
+
+
     
     
     // Endpoint to get questions by category
