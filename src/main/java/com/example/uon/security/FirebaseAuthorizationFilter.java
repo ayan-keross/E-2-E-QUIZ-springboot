@@ -65,9 +65,13 @@ public class FirebaseAuthorizationFilter extends OncePerRequestFilter {
             } catch (FirebaseAuthException e) {
                 response.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Invalid Firebase token");
                 return;
+
+
             } catch (RuntimeException e) {
                 System.out.println("Error retrieving user role: " + e.getMessage());
                 response.sendError(HttpServletResponse.SC_FORBIDDEN, "Role not found");
+
+                
                 return;
             }
         }
