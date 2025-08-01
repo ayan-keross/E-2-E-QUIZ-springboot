@@ -36,6 +36,8 @@ public class AuthController {
             // The token from the client should be "Bearer <token>"
             String token = idToken.substring(7);
             User newUser = userService.registerUser(token, roleRequest.getRole());
+
+            System.out.println("New User"+newUser);
             if (roleRequest.getRole().toString().equals("TUTOR")) {
                 System.out.println("User is a tutor, redirecting to tutor home. for new user");
                 URI redirectUri = URI.create("/tutor/");

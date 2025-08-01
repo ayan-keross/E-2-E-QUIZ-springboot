@@ -35,6 +35,8 @@ public class UserService {
             throw new IllegalStateException("User already registered.");
          }
 
+         System.out.println(uid+": "+email+": "+role);
+        
         User newUser = new User();
         newUser.setFirebaseUid(uid);
         newUser.setEmail(email);
