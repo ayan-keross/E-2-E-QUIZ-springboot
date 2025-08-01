@@ -27,6 +27,9 @@ public class QuestionController {
     public ResponseEntity<ApiResponse<Question>> getAllQuestions (){
         return questionService.getAllQuestions();
     }
+
+
+    
     
     // Endpoint to get questions by category
     @GetMapping("/category/{category}")
@@ -34,6 +37,8 @@ public class QuestionController {
         // Logic to filter questions by category
         return questionService.getQuestionsByCategory(category); // Return filtered questions
     }
+
+
     @PostMapping("/create")
     public ResponseEntity<ApiResponse<Question>> createQuestion(@RequestBody Question question) {
         // Logic to create a new question

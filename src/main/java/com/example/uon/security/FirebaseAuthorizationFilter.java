@@ -32,6 +32,13 @@ public class FirebaseAuthorizationFilter extends OncePerRequestFilter {
             HttpServletResponse response,
             FilterChain filterChain)
             throws ServletException, IOException {
+
+        String path = request.getRequestURI();
+        // Skip filter for registration endpoint
+        if (path.equals("/register") || path.equals("/api/auth/register")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         String authHeader = request.getHeader("Authorization");
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {

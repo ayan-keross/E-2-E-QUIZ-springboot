@@ -35,17 +35,29 @@ public class AuthController {
         try {
             // The token from the client should be "Bearer <token>"
             String token = idToken.substring(7);
+            System.out.println("In register controller");
             User newUser = userService.registerUser(token, roleRequest.getRole());
 
             System.out.println("New User"+newUser);
             if (roleRequest.getRole().toString().equals("TUTOR")) {
                 System.out.println("User is a tutor, redirecting to tutor home. for new user");
-                URI redirectUri = URI.create("/tutor/");
+                URI redirectUri = URI.create("http://localhost:8080/api/tutor/");
+                return ResponseEntity.status(HttpStatus.SEE_OTHER)
+                                     .location(redirectUri)
+                                     .build();
+            }else if (roleRequest.getRole().toString().equals("STUDENT")) {
+                System.out.println("User is a student, redirecting to student home.");
+                URI redirectUri = URI.create("http://localhost:8080/api/student/");
                 return ResponseEntity.status(HttpStatus.SEE_OTHER)
                                      .location(redirectUri)
                                      .build();
             }
+
+            
+
             return ResponseEntity.ok(newUser);
+
+            
         } catch (FirebaseAuthException e) {
             return ResponseEntity.status(401).build();
         } catch (IllegalStateException e) {
@@ -56,6 +68,8 @@ public class AuthController {
                 if (userRole.getRole().toString().equals("TUTOR")) {
                     System.out.println("User is a tutor, redirecting to tutor home.");
                     URI redirectUri = URI.create("http://localhost:8080/api/tutor/");
+                    System.out.println("Redirect URI: " + redirectUri);
+
                     return ResponseEntity.status(HttpStatus.SEE_OTHER)
                                          .location(redirectUri)
                                          .build();
