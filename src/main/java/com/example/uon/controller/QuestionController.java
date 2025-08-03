@@ -17,7 +17,6 @@ import com.example.uon.utility.ApiResponse;
 
 @RestController
 @RequestMapping("api/question")
-
 public class QuestionController {
 
     @Autowired
